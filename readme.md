@@ -70,9 +70,16 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-Проект доступен по адресу: http://127.0.0.1:8000
+### 5. Запуск тестов
+```bash
+python manage.py test
+```
+Или более подробный вывод
+```bash
+python manage.py test -v 2
+```
 
-### 5. Тестовые данные
+### 6. Тестовые данные
 
 Для заполнения базы тестовыми пользователями и проектами используется команда `test_data`:
 
@@ -143,7 +150,7 @@ python manage.py test_data dev --count 5 --password SecurePass123
 |-------|--------|
 | alex@alex.com | testpass123 |
 | bob@bob.com | testpass123 |
-| carol@carol.com | testpass123 |
+| carl@carl.com | testpass123 |
 
 **Навыки:**
 - Python
