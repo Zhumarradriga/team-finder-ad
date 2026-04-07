@@ -1,7 +1,13 @@
 from django.conf import settings
 from django.db import models
 
+#Модель
 class Skill(models.Model):
+    """Модель Навыков
+
+    Attributes:
+        name: Название навыка.
+    """
     name = models.CharField(
         max_length=124,
         unique=True,
@@ -18,6 +24,18 @@ class Skill(models.Model):
 
 
 class Project(models.Model):
+    """Модель Проекта
+
+    Attributes:
+        name: Название проекта.
+        description: Описание проекта
+        owner: Автор проекта
+        created_at: Дата создания проекта
+        github_url: Ссылка на Github
+        status: Статус проекта
+        participants: Участники проекта
+        skills: Навыки
+    """
     STATUS_CHOICES = [
         ("open", "Открыт"),
         ("closed", "Закрыт"),
@@ -43,7 +61,7 @@ class Project(models.Model):
     )
     github_url = models.URLField(
         blank=True,
-        verbose_name="GitHub",
+        verbose_name="ссылка на GitHub",
     )
     status = models.CharField(
         max_length=6,

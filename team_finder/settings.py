@@ -1,18 +1,14 @@
 from pathlib import Path
+
 from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# TODO: Создать и заполнить .env, ориентируясь на .env_example
 
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = []
-
-
-# Application definition
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -21,6 +17,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "users",
+    "projects",
 ]
 
 MIDDLEWARE = [
@@ -38,7 +36,7 @@ ROOT_URLCONF = "team_finder.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / f"templates_var{config('TASK_VERSION', default='1')}"],
+        "DIRS": [BASE_DIR / "templates_var3"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -52,10 +50,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "team_finder.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -67,52 +61,35 @@ DATABASES = {
     }
 }
 
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {"min_length": 8},
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+AUTH_USER_MODEL = "users.User"
 
-AUTH_PASSWORD_VALIDATORS = []
-if not DEBUG:
-    AUTH_PASSWORD_VALIDATORS.extend(
-        [
-            {
-                "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-            },
-            {
-                "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-            },
-            {
-                "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-            },
-            {
-                "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-            },
-        ]
-    )
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+]
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
-LANGUAGE_CODE = "en-us"
-
+LANGUAGE_CODE = "ru-ru"
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-# Media files
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_URL = "users:login"
+LOGIN_REDIRECT_URL = "projects:list"
