@@ -134,12 +134,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         verbose_name="О себе",
     )
-    favorites = models.ManyToManyField(
-        "projects.Project",
-        related_name="interested_users",
-        blank=True,
-        verbose_name="Избранные проекты",
-    )
     is_active = models.BooleanField(
         default=True,
         verbose_name="Активен",

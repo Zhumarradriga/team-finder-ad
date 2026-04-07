@@ -38,10 +38,4 @@ urlpatterns = [
         views.remove_skill_view,
         name="skill_remove",
     ),
-    path(
-        "<int:project_id>/toggle-favorite/",
-        views.toggle_favorite_view,
-        name="toggle_favorite",
-    ),
-    path("favorites/", views.favorites_view, name="favorites"),
 ]

@@ -234,3 +234,41 @@
     text-decoration: underline;
     color: #666;
 }
+
+/* Пагинация */
+.pagination {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.pagination-link {
+    color: #000;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid #000;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.pagination-link:hover:not(.disabled) {
+    background-color: #000;
+    color: #fff;
+}
+
+.pagination-link.disabled {
+    color: #999;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    color: #666;
+    font-size: 0.9rem;
+}

@@ -164,25 +164,6 @@ def toggle_participate_view(request, project_id):
     return JsonResponse({"status": "ok", "participant": participating})
 
 
-@login_required
-@require_POST
-def toggle_favorite_view(request, project_id):
-    """Добавляет или удаляет проект из избранного текущего пользователя.
-
-    Returns:
-        JSON с текущим статусом избранного (`favorited: bool`).
-    """
-    project = get_object_or_404(Project, pk=project_id)
-    user = request.user
-    if user.favorites.filter(pk=project.pk).exists():
-        user.favorites.remove(project)
-        favorited = False
-    else:
-        user.favorites.add(project)
-        favorited = True
-    return JsonResponse({"status": "ok", "favorited": favorited})
-
-
 def skills_autocomplete_view(request):
     """Возвращает список навыков для автодополнения.
 
@@ -276,21 +257,6 @@ def remove_skill_view(request, project_id, skill_id):
         )
     project.skills.remove(skill)
     return JsonResponse({"status": "ok"})
-
-
-@login_required
-def favorites_view(request):
-    """Отображает список проектов, добавленных пользователем в избранное.
-
-    Загружает проекты в порядке убывания даты добавления.
-    """
-    projects = request.user.favorites.all().order_by("-created_at")
-    return render(
-        request,
-        "projects/favorite_projects.html",
-        {"projects": projects},
-    )
-
 
 def paginate(queryset, request):
     """Пагинация
