@@ -10,7 +10,7 @@ class ProjectForm(forms.ModelForm):
         status: Поле выбора статуса с фиксированным набором вариантов.
     """
     status = forms.ChoiceField(
-        choices=Project.STATUS_CHOICES,
+        choices=Project.Status,
         label="Статус",
     )
 
