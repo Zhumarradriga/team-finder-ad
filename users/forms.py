@@ -21,9 +21,7 @@ class RegisterForm(forms.Form):
     def clean_email(self):
         email = self.cleaned_data["email"]
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError(
-                "Данный email привязан к другому пользователю."
-            )
+            raise forms.ValidationError("Данный email привязан к другому пользователю.")
         return email
 
     def clean_password(self):
@@ -102,7 +100,7 @@ class UserPasswordChangeForm(PasswordChangeForm):
 
 
 def validate_github_url(url):
-    if "github.com" not in url:
+    if url and "github.com" not in url:
         raise forms.ValidationError("Ссылка должна вести на GitHub")
     return url
 
