@@ -8,11 +8,12 @@ Usage:
     python manage.py seed_test_data dev --skills Python Django  # с фильтрами
     python manage.py seed_test_data --help                   # показать справку
 """
+
 import argparse
 from typing import Any, Optional
 
 from django.contrib.auth import get_user_model
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from projects.models import Project, Skill
@@ -22,6 +23,7 @@ User = get_user_model()
 
 class Command(BaseCommand):
     """Команда для создания тестовых данных с гибкой настройкой."""
+
     help = "Создаёт тестовых пользователей и проекты"
 
     def add_arguments(self, parser: argparse.ArgumentParser) -> None:
@@ -73,7 +75,7 @@ class Command(BaseCommand):
 
         # Префикс для данных в зависимости от окружения
         prefix = "" if environment == "dev" else f"{environment}_"
-        
+
         # Проверка на существующие данные
         test_email = f"{prefix}alice@example.com"
         if User.objects.filter(email=test_email).exists() and not force:
@@ -92,8 +94,8 @@ class Command(BaseCommand):
 
         # Создание пользователей
         self.stdout.write(f"Создание пользователей (окружение: {environment})...")
-        alice = self._create_user(
-            email=f"{prefix}alice@example.com",
+        alex = self._create_user(
+            email=f"{prefix}alex@alex.com",
             name="Алекс",
             surname="Тумба",
             password=password,
@@ -101,19 +103,19 @@ class Command(BaseCommand):
             github_url="https://github.com/alice",
         )
         bob = self._create_user(
-            email=f"{prefix}bob@example.com",
+            email=f"{prefix}bob@bob.com",
             name="Боб",
             surname="Бобович",
             password=password,
             about="Бэкенд-разработчик, Python/Django.",
             github_url="https://github.com/bob",
         )
-        carol = self._create_user(
-            email=f"{prefix}carol@example.com",
+        carl = self._create_user(
+            email=f"{prefix}carl@carl.com",
             name="Карл",
             surname="Штейн",
             password=password,
-            about="UI/UX дизайнер.",
+            about="UI/UX дизайнер, TypeScript",
         )
 
         if users_only:
@@ -136,7 +138,7 @@ class Command(BaseCommand):
         for name, desc in all_skills:
             skill, created = Skill.objects.get_or_create(
                 name=f"{prefix}{name}",
-                defaults={"name": f"{prefix}{name}"}  # если добавите описание
+                defaults={"name": f"{prefix}{name}"},  # если добавите описание
             )
             skills_map[name] = skill
             if created:
@@ -147,7 +149,7 @@ class Command(BaseCommand):
             {
                 "name": "Трекер задач",
                 "desc": "Простое приложение для отслеживания задач в команде.",
-                "owner": alice,
+                "owner": alex,
                 "skills": ["Python", "Django"],
                 "github": "https://github.com/alice/task-tracker",
             },
@@ -161,7 +163,7 @@ class Command(BaseCommand):
             {
                 "name": "Дизайн-система",
                 "desc": "Набор UI-компонентов и гайдлайнов.",
-                "owner": carol,
+                "owner": carl,
                 "skills": ["Figma", "React"],
                 "github": "",
             },
@@ -175,42 +177,42 @@ class Command(BaseCommand):
             {
                 "name": "Дашборд аналитики",
                 "desc": "Визуализация метрик проекта в реальном времени.",
-                "owner": alice,
+                "owner": alex,
                 "skills": ["React", "TypeScript", "Figma"],
                 "github": "https://github.com/alice/analytics-dashboard",
             },
             {
                 "name": "test1",
                 "desc": "test1",
-                "owner": carol,
+                "owner": carl,
                 "skills": ["React", "TypeScript", "Figma"],
                 "github": "https://github.com/alice/analytics-dashboard",
             },
             {
                 "name": "test2",
                 "desc": "test2",
-                "owner": carol,
+                "owner": carl,
                 "skills": ["React", "TypeScript", "Figma"],
                 "github": "https://github.com/alice/analytics-dashboard",
             },
             {
                 "name": "test3",
                 "desc": "test3",
-                "owner": carol,
+                "owner": carl,
                 "skills": ["React", "TypeScript", "Figma"],
                 "github": "https://github.com/alice/analytics-dashboard",
             },
             {
                 "name": "test4",
                 "desc": "test4",
-                "owner": carol,
+                "owner": carl,
                 "skills": ["React", "TypeScript", "Figma"],
                 "github": "https://github.com/alice/analytics-dashboard",
             },
             {
                 "name": "test5",
                 "desc": "test5",
-                "owner": carol,
+                "owner": carl,
                 "skills": ["React", "TypeScript", "Figma"],
                 "github": "https://github.com/alice/analytics-dashboard",
             },
@@ -233,9 +235,11 @@ class Command(BaseCommand):
             project.participants.add(config["owner"])
             self.stdout.write(f"  ✓ Проект: {project.name}")
 
-        self.stdout.write(self.style.SUCCESS(
-            f"Готово! Создано: 3 пользователя, {min(count, len(projects_config))} проектов."
-        ))
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Готово! Создано: 3 пользователя, {min(count, len(projects_config))} проектов."
+            )
+        )
 
     def _create_user(self, email: str, password: str, **kwargs) -> User:
         """Вспомогательный метод для создания пользователя."""
