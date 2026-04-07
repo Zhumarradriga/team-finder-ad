@@ -11,16 +11,16 @@ from PIL import Image, ImageDraw, ImageFont
 from users.managers import UserManager
 
 AVATAR_COLORS = [
-    "#2768FFD3"
-    "#FF3E3E"
-    "#50FF67"
-    "#FFC53F"
-    "#A78BFA"
-    "#FF9244"
-    "#2DC7E2"
-    "#FF3B9D"
-    "#BBFF56"
-    "#FFAB67"
+    "#2768FFD3",
+    "#FF3E3E",
+    "#50FF67",
+    "#FFC53F",
+    "#A78BFA",
+    "#FF9244",
+    "#2DC7E2",
+    "#FF3B9D",
+    "#BBFF56",
+    "#FFAB67",
 ]
 AVATAR_FONT_SIZE = 100
 ABOUT_MAX_LENGTH = 256
