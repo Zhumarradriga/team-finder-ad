@@ -8,7 +8,9 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 DEBUG = config("DJANGO_DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+_allowed_hosts_str = config("ALLOWED_HOSTS", default="localhost,127.0.0.1")
+
+ALLOWED_HOSTS = [host.strip() for host in _allowed_hosts_str.split(",") if host.strip()]
 
 INSTALLED_APPS = [
     "django.contrib.admin",

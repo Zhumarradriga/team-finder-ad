@@ -1,28 +1,16 @@
 from django.conf import settings
 from django.db import models
 
-SKILL_MAX_LENGTH = 124
-PROJECT_NAME_MAX_LENGTH = 200
-PROJECT_STATUS_MAX_LENGTH = 6
+from consts import (
+    PROJECT_NAME_MAX_LENGTH,
+    PROJECT_STATUS_CLOSED,
+    PROJECT_STATUS_MAX_LENGTH,
+    PROJECT_STATUS_OPEN,
+    SKILL_MAX_LENGTH,
+)
+from validators import validate_github_url
 
-class ProjectManager(models.Manager):
-    def open(self):
-        """Все открытые проекты, готовые к участию."""
-        return self.filter(status="open")
-    
-    def closed(self):
-        """Все завершённые проекты."""
-        return self.filter(status="closed")
-    
-    def by_owner(self, user):
-        """Проекты, созданные конкретным пользователем."""
-        return self.filter(owner=user)
-    
-    def with_participant(self, user):
-        """Проекты, в которых пользователь участвует (включая свои)."""
-        return self.filter(
-            models.Q(owner=user) | models.Q(participants=user)
-        ).distinct()
+from .managers import ProjectManager
 
 
 class Skill(models.Model):
@@ -34,6 +22,7 @@ class Skill(models.Model):
     Attributes:
         name: Уникальное название навыка (например, "Python", "Django").
     """
+
     name = models.CharField(
         max_length=SKILL_MAX_LENGTH,
         unique=True,
@@ -67,12 +56,10 @@ class Project(models.Model):
         participants: ManyToMany с пользователями. Пустой по умолчанию.
         skills: ManyToMany с навыками. Пустой по умолчанию.
     """
-    objects = ProjectManager()
 
-    
     class Status(models.TextChoices):
-        OPEN = "open", "Открыт"
-        CLOSED = "closed", "Закрыт"
+        OPEN = PROJECT_STATUS_OPEN, "Открыт"
+        CLOSED = PROJECT_STATUS_CLOSED, "Закрыт"
 
     name = models.CharField(
         max_length=PROJECT_NAME_MAX_LENGTH,
@@ -93,8 +80,7 @@ class Project(models.Model):
         verbose_name="Дата создания проекта",
     )
     github_url = models.URLField(
-        blank=True,
-        verbose_name="ссылка на GitHub",
+        blank=True, verbose_name="ссылка на GitHub", validators=[validate_github_url]
     )
     status = models.CharField(
         max_length=PROJECT_STATUS_MAX_LENGTH,
@@ -114,6 +100,8 @@ class Project(models.Model):
         blank=True,
         verbose_name="Навыки",
     )
+
+    objects = ProjectManager()
 
     class Meta:
         verbose_name = "Проект"

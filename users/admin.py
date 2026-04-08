@@ -7,7 +7,14 @@ from users.models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ("email", "name", "surname", "avatar_thumbnail", "is_staff", "is_active")
+    list_display = (
+        "email",
+        "name",
+        "surname",
+        "avatar_thumbnail",
+        "is_staff",
+        "is_active",
+    )
     list_filter = ("is_staff", "is_active")
     search_fields = ("email", "name", "surname")
     ordering = ("email",)
@@ -18,8 +25,12 @@ class UserAdmin(BaseUserAdmin):
             "Личные данные пользователя",
             {
                 "fields": (
-                    "name", "surname", "avatar",
-                    "phone", "github_url", "about",
+                    "name",
+                    "surname",
+                    "avatar",
+                    "phone",
+                    "github_url",
+                    "about",
                 )
             },
         ),
@@ -27,17 +38,23 @@ class UserAdmin(BaseUserAdmin):
             "Права доступа и группы",
             {
                 "fields": (
-                    "is_active", "is_staff", "is_superuser",
-                    "groups", "user_permissions",
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
                 )
             },
         ),
     )
     add_fieldsets = (
-        (None, {
-            "classes": ("wide",),
-            "fields": ("email", "name", "surname", "password1", "password2"),
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("email", "name", "surname", "password1", "password2"),
+            },
+        ),
     )
 
     @admin.display(description="Аватар")

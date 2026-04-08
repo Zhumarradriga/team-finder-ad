@@ -6,28 +6,42 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('projects', '0001_initial'),
+        ("projects", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='owner',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='owned_projects', to=settings.AUTH_USER_MODEL, verbose_name='Автор проекта'),
+            model_name="project",
+            name="owner",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="owned_projects",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Автор проекта",
+            ),
         ),
         migrations.AddField(
-            model_name='project',
-            name='participants',
-            field=models.ManyToManyField(blank=True, related_name='participated_projects', to=settings.AUTH_USER_MODEL, verbose_name='Участники проекта'),
+            model_name="project",
+            name="participants",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="participated_projects",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Участники проекта",
+            ),
         ),
         migrations.AddField(
-            model_name='project',
-            name='skills',
-            field=models.ManyToManyField(blank=True, related_name='projects', to='projects.skill', verbose_name='Навыки'),
+            model_name="project",
+            name="skills",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="projects",
+                to="projects.skill",
+                verbose_name="Навыки",
+            ),
         ),
     ]

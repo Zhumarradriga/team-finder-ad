@@ -6,8 +6,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
-NAME_MAX_LENGTH = 124
-SURNAME_MAX_LENGTH = 124
+from consts import NAME_MAX_LENGTH, SURNAME_MAX_LENGTH
+from services import normalize_phone
 
 User = get_user_model()
 
@@ -79,10 +79,6 @@ class EditProfileForm(forms.ModelForm):
 
         return normalized
 
-    def clean_github_url(self):
-        url = self.cleaned_data.get("github_url", "").strip()
-        return validate_github_url(url)
-
 
 class UserPasswordChangeForm(PasswordChangeForm):
     old_password = forms.CharField(
@@ -97,15 +93,3 @@ class UserPasswordChangeForm(PasswordChangeForm):
         label="Подтвердите новый пароль",
         widget=forms.PasswordInput,
     )
-
-
-def validate_github_url(url):
-    if url and "github.com" not in url:
-        raise forms.ValidationError("Ссылка должна вести на GitHub")
-    return url
-
-
-def normalize_phone(phone: str) -> str:
-    if phone.startswith("8"):
-        return "+7" + phone[1:]
-    return phone

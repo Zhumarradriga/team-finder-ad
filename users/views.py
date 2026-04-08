@@ -1,17 +1,17 @@
 from django.contrib.auth import (
-    authenticate, get_user_model, login, logout, update_session_auth_hash,
+    authenticate,
+    get_user_model,
+    login,
+    logout,
+    update_session_auth_hash,
 )
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-from django.core.paginator import Paginator
 
-from users.forms import (
-    EditProfileForm, LoginForm, RegisterForm, UserPasswordChangeForm,
-)
+from services import paginate
+from users.forms import EditProfileForm, LoginForm, RegisterForm, UserPasswordChangeForm
 
 User = get_user_model()
-
-PROJECTS_PAG = 12
 
 
 def register_view(request):
@@ -81,8 +81,3 @@ def participants_view(request):
         "users/participants.html",
         {"participants": page_obj},
     )
-
-
-def paginate(queryset, request):
-    paginator = Paginator(queryset, PROJECTS_PAG)
-    return paginator.get_page(request.GET.get("page"))

@@ -5,13 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-from django.core.paginator import Paginator
 
+from consts import SKILLS_AUTOCOMPLETE_LIMIT
 from projects.forms import ProjectForm
 from projects.models import Project, Skill
+from services import paginate
 
-SKILLS_AUTOCOMPLETE_LIMIT = 10
-PROJECTS_PAG = 12
 
 def project_list_view(request):
     """Отображает список проектов с пагинацией и фильтрацией по навыку.
@@ -26,9 +25,7 @@ def project_list_view(request):
         Отрендеренный HTML-шаблон с объектом страницы, списком навыков
         и активным фильтром.
     """
-    projects = Project.objects.select_related("owner").prefetch_related(
-        "participants"
-    )
+    projects = Project.objects.select_related("owner").prefetch_related("participants")
     all_skills = Skill.objects.order_by("name").values_list("name", flat=True)
     active_skill = request.GET.get("skill", "").strip()
 
@@ -37,11 +34,15 @@ def project_list_view(request):
 
     page_obj = paginate(projects, request)
 
-    return render(request, "projects/project_list.html", {
-        "projects": page_obj,
-        "all_skills": all_skills,
-        "active_skill": active_skill,
-    })
+    return render(
+        request,
+        "projects/project_list.html",
+        {
+            "projects": page_obj,
+            "all_skills": all_skills,
+            "active_skill": active_skill,
+        },
+    )
 
 
 def project_detail_view(request, project_id):
@@ -124,12 +125,12 @@ def complete_project_view(request, project_id):
             {"status": "error", "detail": "Forbidden"},
             status=HTTPStatus.FORBIDDEN,
         )
-    if project.status != "open":
+    if project.status != Project.Status.OPEN:
         return JsonResponse(
             {"status": "error", "detail": "Already closed"},
             status=HTTPStatus.BAD_REQUEST,
         )
-    project.status = "closed"
+    project.status = Project.Status.CLOSED
     project.save()
     return JsonResponse({"status": "ok", "project_status": "closed"})
 
@@ -155,12 +156,10 @@ def toggle_participate_view(request, project_id):
             },
             status=HTTPStatus.BAD_REQUEST,
         )
-    if project.participants.filter(pk=user.pk).exists():
+    if participating := project.participants.filter(pk=user.pk).exists():
         project.participants.remove(user)
-        participating = False
     else:
         project.participants.add(user)
-        participating = True
     return JsonResponse({"status": "ok", "participant": participating})
 
 
@@ -175,9 +174,9 @@ def skills_autocomplete_view(request):
         Параметр `safe=False` необходим, т.к. возвращается list, а не dict.
     """
     query = request.GET.get("q", "").strip()
-    skills = Skill.objects.filter(
-        name__istartswith=query
-    ).order_by("name")[:SKILLS_AUTOCOMPLETE_LIMIT]
+    skills = Skill.objects.filter(name__istartswith=query).order_by("name")[
+        :SKILLS_AUTOCOMPLETE_LIMIT
+    ]
     data = [{"id": skill.id, "name": skill.name} for skill in skills]
     return JsonResponse(data, safe=False)
 
@@ -229,8 +228,10 @@ def add_skill_view(request, project_id):
 
     return JsonResponse(
         {
-            "id": skill.id, "name": skill.name,
-            "created": created, "added": added,
+            "id": skill.id,
+            "name": skill.name,
+            "created": created,
+            "added": added,
         }
     )
 
@@ -257,9 +258,3 @@ def remove_skill_view(request, project_id, skill_id):
         )
     project.skills.remove(skill)
     return JsonResponse({"status": "ok"})
-
-def paginate(queryset, request):
-    """Пагинация
-    """
-    paginator = Paginator(queryset, PROJECTS_PAG)
-    return paginator.get_page(request.GET.get("page"))

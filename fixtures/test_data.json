@@ -1,0 +1,60 @@
+{
+  "users": [
+    {
+      "email": "alex@alex.com",
+      "name": "Алекс",
+      "surname": "Тумба",
+      "about": "Фронтенд-разработчик, люблю React и TypeScript.",
+      "github_url": "https://github.com/alice",
+      "is_active": true
+    },
+    {
+      "email": "bob@bob.com",
+      "name": "Боб",
+      "surname": "Бобович",
+      "about": "Бэкенд-разработчик, Python/Django.",
+      "github_url": "https://github.com/bob",
+      "is_active": true
+    },
+    {
+      "email": "carl@carl.com",
+      "name": "Карл",
+      "surname": "Штейн",
+      "about": "UI/UX дизайнер, TypeScript",
+      "is_active": true
+    }
+  ],
+  "skills": [
+    {"name": "Python"},
+    {"name": "React"},
+    {"name": "Django"},
+    {"name": "Figma"},
+    {"name": "TypeScript"}
+  ],
+  "projects": [
+    {
+      "name": "Трекер задач",
+      "description": "Простое приложение для отслеживания задач в команде.",
+      "owner_email": "alex@alex.com",
+      "skills": ["Python", "Django"],
+      "github_url": "https://github.com/alice/task-tracker",
+      "status": "OPEN"
+    },
+    {
+      "name": "Портфолио-генератор",
+      "description": "Сервис для автоматической генерации портфолио по GitHub.",
+      "owner_email": "bob@bob.com",
+      "skills": ["React", "TypeScript"],
+      "github_url": "https://github.com/bob/portfolio-gen",
+      "status": "OPEN"
+    },
+    {
+      "name": "Дизайн-система",
+      "description": "Набор UI-компонентов и гайдлайнов.",
+      "owner_email": "carl@carl.com",
+      "skills": ["Figma", "React"],
+      "github_url": "",
+      "status": "OPEN"
+    }
+  ]
+}

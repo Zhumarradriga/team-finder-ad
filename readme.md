@@ -56,7 +56,7 @@ POSTGRES_USER=team_finder
 POSTGRES_PASSWORD=team_finder
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5433
-TASK_VERSION=3
+ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 ```
 
 ### 3. Развертывание Базы данных
